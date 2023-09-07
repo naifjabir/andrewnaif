@@ -1,2 +1,7 @@
 # andrewnaif
-ECSE 6320
+Andrew Prata
+Naif Jabir
+
+ECSE-6320 
+Advanced Computer Systems 
+Fall 2023
