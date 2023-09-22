@@ -1,0 +1,94 @@
+E:\Andrew Jr\Downloads\mlc_v3.10\Windows>mlc --idle_latency -b900k
+Intel(R) Memory Latency Checker - v3.10
+Command line parameters: --idle_latency -b900k
+
+Using buffer size of 0.879MiB
+Each iteration took 14.2 base frequency clocks (        3.9     ns)
+
+
+E:\Andrew Jr\Downloads\mlc_v3.10\Windows>mlc --idle_latency -b900k
+Intel(R) Memory Latency Checker - v3.10
+Command line parameters: --idle_latency -b900k
+
+Using buffer size of 0.879MiB
+Each iteration took 14.1 base frequency clocks (        3.9     ns)
+
+
+E:\Andrew Jr\Downloads\mlc_v3.10\Windows>mlc --idle_latency -b900k
+Intel(R) Memory Latency Checker - v3.10
+Command line parameters: --idle_latency -b900k
+
+Using buffer size of 0.879MiB
+Each iteration took 14.3 base frequency clocks (        4.0     ns)
+
+
+E:\Andrew Jr\Downloads\mlc_v3.10\Windows>mlc --idle_latency -b11m
+Intel(R) Memory Latency Checker - v3.10
+Command line parameters: --idle_latency -b11m
+
+Using buffer size of 11.000MiB
+Each iteration took 60.7 base frequency clocks (        16.8    ns)
+
+
+E:\Andrew Jr\Downloads\mlc_v3.10\Windows>mlc --idle_latency -b11m
+Intel(R) Memory Latency Checker - v3.10
+Command line parameters: --idle_latency -b11m
+
+Using buffer size of 11.000MiB
+Each iteration took 60.6 base frequency clocks (        16.8    ns)
+
+
+E:\Andrew Jr\Downloads\mlc_v3.10\Windows>mlc --idle_latency -b11m
+Intel(R) Memory Latency Checker - v3.10
+Command line parameters: --idle_latency -b11m
+
+Using buffer size of 11.000MiB
+Each iteration took 61.3 base frequency clocks (        17.0    ns)
+
+
+E:\Andrew Jr\Downloads\mlc_v3.10\Windows>mlc --idle_latency -b23m
+Intel(R) Memory Latency Checker - v3.10
+Command line parameters: --idle_latency -b23m
+
+Using buffer size of 23.000MiB
+Each iteration took 125.8 base frequency clocks (       34.9    ns)
+
+
+E:\Andrew Jr\Downloads\mlc_v3.10\Windows>mlc --idle_latency -b23m
+Intel(R) Memory Latency Checker - v3.10
+Command line parameters: --idle_latency -b23m
+
+Using buffer size of 23.000MiB
+Each iteration took 134.4 base frequency clocks (       37.2    ns)
+
+
+E:\Andrew Jr\Downloads\mlc_v3.10\Windows>mlc --idle_latency -b23m
+Intel(R) Memory Latency Checker - v3.10
+Command line parameters: --idle_latency -b23m
+
+Using buffer size of 23.000MiB
+Each iteration took 132.9 base frequency clocks (       36.8    ns)
+
+
+E:\Andrew Jr\Downloads\mlc_v3.10\Windows>mlc --idle_latency -b60m
+Intel(R) Memory Latency Checker - v3.10
+Command line parameters: --idle_latency -b60m
+
+Using buffer size of 60.000MiB
+Each iteration took 252.0 base frequency clocks (       69.9    ns)
+
+
+E:\Andrew Jr\Downloads\mlc_v3.10\Windows>mlc --idle_latency -b60m
+Intel(R) Memory Latency Checker - v3.10
+Command line parameters: --idle_latency -b60m
+
+Using buffer size of 60.000MiB
+Each iteration took 252.2 base frequency clocks (       69.9    ns)
+
+
+E:\Andrew Jr\Downloads\mlc_v3.10\Windows>mlc --idle_latency -b60m
+Intel(R) Memory Latency Checker - v3.10
+Command line parameters: --idle_latency -b60m
+
+Using buffer size of 60.000MiB
+Each iteration took 252.0 base frequency clocks (       69.8    ns)

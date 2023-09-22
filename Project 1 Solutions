@@ -1,14 +1,50 @@
 Solutions to ACS Project 1
 9/22/2023
+Andrew Prata, Naif Jabir
 
-(1) Read and Write Latency for Cache and DRAM 
+(1) Read and Write Latency for Cache and DRAM
+_____________________________________________
+
+Zero queueing delay implies that there is no wait for
+data writing or access. This means that the system
+should be idling, or as close to idling as possible
+to get an accurate reading of unloaded latencies.
+
+The size of the caches for the target processor,
+an Intel Core i7-12700K, are as follows:
+L1: 1.0 MB
+L2: 12.0 MB
+L3: 25.0 MB
+
+To test latencies, we will use the MLC commands below:
+Testing L1
+mlc --idle_latency -b900k
+
+Testing L2
+mlc --idle_latency -b11m
+
+Testing L3
+mlc --idle_latency -b23m
+
+Testing DRAM
+mlc --idle_latency -b60m
+
+These commands yielded the following data, averaged
+over three runs each:
+L1 Cache Read Latency: 3.93 ns
+L2 Cache Read Latency: 16.87 ns
+L3 Cache Read Latency: 36.30 ns
+DRAM Read Latency:     69.87 ns
 
 (2) DRAM Maximum Bandwidth
+__________________________
+
 The Intel MLC uses the size of the allocated buffer
 to determine the Bandwidth of a particular memory
 hierarchy level. Need to find out the command line
 parameters to configure the size of this. Then, can
 determine what the latencies of different levels are.
+PAGE 9 OF MLC DOCUMENT
 
 (3) The Tradeoff Between Latency and Bandwidth of DRAM
 
