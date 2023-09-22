@@ -1,0 +1,18 @@
+Solutions to ACS Project 1
+9/22/2023
+
+(1) Read and Write Latency for Cache and DRAM 
+
+(2) DRAM Maximum Bandwidth
+The Intel MLC uses the size of the allocated buffer
+to determine the Bandwidth of a particular memory
+hierarchy level. Need to find out the command line
+parameters to configure the size of this. Then, can
+determine what the latencies of different levels are.
+
+(3) The Tradeoff Between Latency and Bandwidth of DRAM
+
+(4) Impact of Cache Miss Ratio on Performance
+
+(5) Impact of TLB Miss Ratio on Performance
+
