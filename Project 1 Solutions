@@ -64,6 +64,8 @@ together, but it results in an error so we have no way to analyze all write band
 The other commands (max_bandwidth and peak_injection_bandwidth) cannot use -Wn parameter
 
 (3) The Tradeoff Between Latency and Bandwidth of DRAM
+___________________________________________________________________________________
+
 --loaded_latency
 we will get a certain bandwidth accosiated with a certain latency and show how this data
 mimmicks the queuing theory (at first, from 0-25,000 mb/s, we get relatively the same latency
