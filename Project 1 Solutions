@@ -66,12 +66,23 @@ The other commands (max_bandwidth and peak_injection_bandwidth) cannot use -Wn p
 (3) The Tradeoff Between Latency and Bandwidth of DRAM
 ______________________________________________________
 
+(initally we tried to code the queuing theory, we had a number of tasks and gave we tasks at
+certain amount of delay to prevent pile up at the queue, but no matter how many tasks we gave
+whether it was 12 tasks or 250 tasks, the throughput and latency seemed to stay around the same
+value and it was giving us the opposite of what the queuing theory predicts)
+XXXXXX
+
+(we decided coding the queuing theory was too difficult and looked through the mlc DOCUMENT
+again to see what commands could help us get both throughput and latency)
+
 --loaded_latency
 we will get a certain bandwidth accosiated with a certain latency and show how this data
 mimmicks the queuing theory (at first, from 0-25,000 mb/s, we get relatively the same latency
 of 100-150, but once we should the bandwidth to 35,000 and higher, the latency increases at
 an exponential rate)
-
+(queuing theory predicts as the system throughput increases linearly, we will eventually see a
+point in the system, where the response time aka latency increases exponentially instead of 
+staying around the same value)
 
 (4) Impact of Cache Miss Ratio on Performance
 
