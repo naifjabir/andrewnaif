@@ -36,6 +36,18 @@ L2 Cache Read Latency: 16.87 ns
 L3 Cache Read Latency: 36.30 ns
 DRAM Read Latency:     69.87 ns
 
+Latency for writing to any level of the memory
+hierarchy is less than that for reading, under
+most circumstances. We are unable to precisely
+determine these values, however we can say with
+a high degree of certainty that they are less than
+or equal to, but no higher than, the Read latencies
+that are listed above. This is due to the non-
+blocking nature of a memory write, as opposed to the
+blocking nature of a read. Reading requires that the
+processor wait for a value to be returned from the
+memory, however writing does not have this requirement.
+
 (2) DRAM Maximum Bandwidth
 __________________________
 
@@ -44,9 +56,43 @@ to determine the Bandwidth of a particular memory
 hierarchy level. Need to find out the command line
 parameters to configure the size of this. Then, can
 determine what the latencies of different levels are.
-PAGE 9 OF MLC DOCUMENT
+<PAGES 8, 9 OF MLC DOCUMENT>
+
+To test maximum bandwidth, we will use the MLC commands below:
+Testing DRAM
+Granularity: 64 Bytes
+ReadOnly: mlc --max_bandwidth -l64 -R
+WriteOnly:mlc --max_bandwidth -l64 -W6
+70:30 R:W: mlc--max_bandwidth -l64 -W2
+50:50 R:W: mlc --max_bandwidth -l64 -W5
+
+Granularity: 256 Bytes
+ReadOnly: mlc --max_bandwidth -l256 -R
+WriteOnly:mlc --max_bandwidth -l256 -W6
+70:30 R:W: mlc--max_bandwidth -l256 -W2
+50:50 R:W: mlc --max_bandwidth -l256 -W5
+
+Granularity: 1024 Bytes
+ReadOnly: mlc --max_bandwidth -l1024 -R
+WriteOnly:mlc --max_bandwidth -l1024 -W6
+70:30 R:W: mlc--max_bandwidth -l1024 -W2
+50:50 R:W: mlc --max_bandwidth -l1024 -W5
 
 (3) The Tradeoff Between Latency and Bandwidth of DRAM
+There is an inherent trade-off between the latency of
+a memory system and the bandwith of the system. As
+discussed in class regarding SRAM array implementation,
+this is an inversely proportional relationship. A
+memory system can be designed to maximize bandwith,
+and thus throughput, OR can be optimized for low latency.
+With an increase in throughput (moving lots of data
+for a given unit of time), there will be negative
+impacts to latency due to constraints applied from
+semiconductor physics. Additionally, another key
+concept from queing theory suggests that a maximally
+utilized system correlates with high throughput.
+However, the higher that the utilization climbs, the
+longer the queue will inevitably become.
 
 (4) Impact of Cache Miss Ratio on Performance
 
