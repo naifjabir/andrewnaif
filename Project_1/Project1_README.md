@@ -89,21 +89,10 @@ Maximum bandwidth we can get with stride byte size of 1024 (for all read, 3:1 re
 
 According to the documentation, the bandwidth matrix command is supposed to be able to use `-ln` and `-Wn` together, but it results in an error so we have no way to analyze all write bandwidth for 256 bytes and 1024 bytes. The other commands (`--max_bandwidth` and `--peak_injection_bandwidth`) cannot use `-Wn` parameter.
 
-so there is a scheduler and a buffer (which we can change and right now its a 100mb buffer 
-to access DRAM) and because all read and all write is one operation its easier to handle 
-because its running one type of process but the ratios of read and write start to force the 
-computer to do two different type of processes and thats why bandwidth deceases 
+There is a scheduler and a buffer (which we can change and right now its a 100mb buffer  to access DRAM) and because all read and all write is one operation its easier to handle  because its running one type of process but the ratios of read and write start to force the computer to do two different type of processes and thats why bandwidth deceases.
 
-we have two reasons why this may be happening: 1) the cache and tlb are loading addresses 
-and each time  a write operation comes after a read operation (or vice versa) at the same 
-register, it validates the cache as we see with the cache coherence flow chart on slide 33, 
-and has to spend time getting the read-miss and write-miss messages across the before it can 
-properly form the request and more time getting the data row from DRAM. 2) the registers for 
-a read operation has to read from an entire row buffer (aka page) and rewrite the row buffer 
-back into the DRAM array, so when we start including more and more write operations, the 
-scheduler cannot efficiently sort the reads and writes without breaking the order of the 
-requests and therefore corrupting/invalidating the data it needed to access, so it has to 
-spend more time re-writing back to DRAM.
+we have two reasons why this may be happening: 1) the cache and tlb are loading addresses  and each time a write operation comes after a read operation (or vice versa) at the same register, it invalidates the cache as we see with the cache coherence flow chart on slide 33, and has to spend time getting the read-miss and write-miss messages across the before it can properly form the request and more time getting the data row from DRAM. 2) the registers for a read operation has to read from an entire row buffer (aka page) and rewrite the row buffer back into the DRAM array, so when we start including more and more write operations, the scheduler cannot efficiently sort the reads and writes without breaking the order of the requests and therefore corrupting/invalidating the data it needed to access, so it has to spend more time re-writing back to DRAM.
+
 tldr:
 1) validates data and has to fetch data more
 2) scheduler doesn't want to break operation order and spends more time writing back to main memory 
