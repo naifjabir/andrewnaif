@@ -46,6 +46,9 @@ parameters to configure the size of this. Then, can
 determine what the latencies of different levels are.
 PAGE 9 OF MLC DOCUMENT
 
+we measure all write for default value of 64 bytes
+--bandwidth_matrix -w6
+
 max bandwidth we can get with stride byte size of 64 (for all read, 3:1 read, 2:1 read, 1:1 read)
 --peak_injection_bandwidth -X -b100m -l64
 
@@ -54,9 +57,6 @@ max bandwidth we can get with stride byte size of 256 (for all read, 3:1 read, 2
 
 max bandwidth we can get with stride byte size of 1024 (for all read, 3:1 read, 2:1 read, 1:1 read)
 --peak_injection_bandwidth -X -b100m -l1024
-
-we measure all write for default value of 64 bytes
---bandwidth_matrix -w6
 
 according to the readme, the bandwidth matrix command is supposed to be able to use -ln and -Wn 
 together, but it results in an error so we have no way to analyze all write bandwidth for
