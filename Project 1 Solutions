@@ -61,9 +61,6 @@ determine what the latencies of different levels are.
 To test maximum bandwidth, we will use the MLC commands below:
 Testing DRAM
 Granuality: 64 B
-we measure all write for default value of 64 bytes
---bandwidth_matrix -W6
-
 max bandwidth we can get with stride byte size of 64 (for all read, 3:1 read, 2:1 read, 1:1 read)
 --peak_injection_bandwidth -X -b100m -l64
 
