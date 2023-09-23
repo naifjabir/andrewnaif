@@ -60,25 +60,44 @@ determine what the latencies of different levels are.
 
 To test maximum bandwidth, we will use the MLC commands below:
 Testing DRAM
-Granularity: 64 Bytes
-ReadOnly: mlc --max_bandwidth -l64 -R
-WriteOnly:mlc --max_bandwidth -l64 -W6
-70:30 R:W: mlc--max_bandwidth -l64 -W2
-50:50 R:W: mlc --max_bandwidth -l64 -W5
+Granuality: 64 B
+we measure all write for default value of 64 bytes
+--bandwidth_matrix -w6
 
-Granularity: 256 Bytes
-ReadOnly: mlc --max_bandwidth -l256 -R
-WriteOnly:mlc --max_bandwidth -l256 -W6
-70:30 R:W: mlc--max_bandwidth -l256 -W2
-50:50 R:W: mlc --max_bandwidth -l256 -W5
+max bandwidth we can get with stride byte size of 64 (for all read, 3:1 read, 2:1 read, 1:1 read)
+--peak_injection_bandwidth -X -b100m -l64
 
-Granularity: 1024 Bytes
-ReadOnly: mlc --max_bandwidth -l1024 -R
-WriteOnly:mlc --max_bandwidth -l1024 -W6
-70:30 R:W: mlc--max_bandwidth -l1024 -W2
-50:50 R:W: mlc --max_bandwidth -l1024 -W5
+Granuality: 256 B
+max bandwidth we can get with stride byte size of 256 (for all read, 3:1 read, 2:1 read, 1:1 read)
+--peak_injection_bandwidth -X -b100m -l256
+
+max bandwidth we can get with stride byte size of 1024 (for all read, 3:1 read, 2:1 read, 1:1 read)
+--peak_injection_bandwidth -X -b100m -l1024
+
+according to the readme, the bandwidth matrix command is supposed to be able to use -ln and -Wn 
+together, but it results in an error so we have no way to analyze all write bandwidth for
+256 bytes and 1024 bytes
+The other commands (max_bandwidth and peak_injection_bandwidth) cannot use -Wn parameter
 
 (3) The Tradeoff Between Latency and Bandwidth of DRAM
+______________________________________________________
+(initally we tried to code the queuing theory, we had a number of tasks and gave we tasks at
+certain amount of delay to prevent pile up at the queue, but no matter how many tasks we gave
+whether it was 12 tasks or 250 tasks, the throughput and latency seemed to stay around the same
+value and it was giving us the opposite of what the queuing theory predicts)
+
+(we decided coding the queuing theory was too difficult and looked through the mlc DOCUMENT
+again to see what commands could help us get both throughput and latency)
+
+--loaded_latency
+we will get a certain bandwidth accosiated with a certain latency and show how this data
+mimmicks the queuing theory (at first, from 0-25,000 mb/s, we get relatively the same latency
+of 100-150, but once we should the bandwidth to 35,000 and higher, the latency increases at
+an exponential rate)
+(queuing theory predicts as the system throughput increases linearly, we will eventually see a
+point in the system, where the response time aka latency increases exponentially instead of 
+staying around the same value)
+
 There is an inherent trade-off between the latency of
 a memory system and the bandwith of the system. As
 discussed in class regarding SRAM array implementation,
