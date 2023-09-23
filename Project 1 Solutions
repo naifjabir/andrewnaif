@@ -1,0 +1,153 @@
+Solutions to ACS Project 1
+9/22/2023
+Andrew Prata, Naif Jabir
+
+(1) Read and Write Latency for Cache and DRAM
+_____________________________________________
+
+Zero queueing delay implies that there is no wait for
+data writing or access. This means that the system
+should be idling, or as close to idling as possible
+to get an accurate reading of unloaded latencies.
+
+The size of the caches for the target processor,
+an Intel Core i7-12700K, are as follows:
+L1: 1.0 MB
+L2: 12.0 MB
+L3: 25.0 MB
+
+To test latencies, we will use the MLC commands below:
+Testing L1
+mlc --idle_latency -b900k
+
+Testing L2
+mlc --idle_latency -b11m
+
+Testing L3
+mlc --idle_latency -b23m
+
+Testing DRAM
+mlc --idle_latency -b60m
+
+These commands yielded the following data, averaged
+over three runs each:
+L1 Cache Read Latency: 3.93 ns
+L2 Cache Read Latency: 16.87 ns
+L3 Cache Read Latency: 36.30 ns
+DRAM Read Latency:     69.87 ns
+
+Latency for writing to any level of the memory
+hierarchy is less than that for reading, under
+most circumstances. We are unable to precisely
+determine these values, however we can say with
+a high degree of certainty that they are less than
+or equal to, but no higher than, the Read latencies
+that are listed above. This is due to the non-
+blocking nature of a memory write, as opposed to the
+blocking nature of a read. Reading requires that the
+processor wait for a value to be returned from the
+memory, however writing does not have this requirement.
+
+(2) DRAM Maximum Bandwidth
+__________________________
+
+The Intel MLC uses the size of the allocated buffer
+to determine the Bandwidth of a particular memory
+hierarchy level. Need to find out the command line
+parameters to configure the size of this. Then, can
+determine what the latencies of different levels are.
+<PAGES 8, 9 OF MLC DOCUMENT>
+
+To test maximum bandwidth, we will use the MLC commands below:
+Testing DRAM
+Granuality: 64 B
+max bandwidth we can get with stride byte size of 64 (for all read, 3:1 read, 2:1 read, 1:1 read)
+--peak_injection_bandwidth -X -b100m -l64
+ALL Reads:        44022 MB/s
+3:1 Reads-Writes: 37476 MB/s
+2:1 Reads-Writes: 36229 MB/s
+1:1 Reads-Writes: 34083 MB/s
+
+Granuality: 256 B
+max bandwidth we can get with stride byte size of 256 (for all read, 3:1 read, 2:1 read, 1:1 read)
+--peak_injection_bandwidth -X -b100m -l256
+ALL Reads:        35683 MB/s
+3:1 Reads-Writes: 30944 MB/s
+2:1 Reads-Writes: 29897 MB/s
+1:1 Reads-Writes: 29101 MB/s
+
+max bandwidth we can get with stride byte size of 1024 (for all read, 3:1 read, 2:1 read, 1:1 read)
+--peak_injection_bandwidth -X -b100m -l1024
+ALL Reads:        42227 MB/s
+3:1 Reads-Writes: 32038 MB/s
+2:1 Reads-Writes: 28845 MB/s
+1:1 Reads-Writes: 29251 MB/s
+
+according to the readme, the bandwidth matrix command is supposed to be able to use -ln and -Wn 
+together, but it results in an error so we have no way to analyze all write bandwidth for
+256 bytes and 1024 bytes
+The other commands (max_bandwidth and peak_injection_bandwidth) cannot use -Wn parameter
+
+We were able to get a few results for -W6 with the bandwidth_matrix command, but
+the results hovered between 36k and 45k MB/s so it's hard to analyze what the program
+is doing in the DRAM when it has all-read or all-write 
+
+
+so there is a scheduler and a buffer (which we can change and right now its a 100mb buffer 
+to access DRAM) and because all read and all write is one operation its easier to handle 
+because its running one type of process but the ratios of read and write start to force the 
+computer to do two different type of processes and thats why bandwidth deceases 
+
+we have two reasons why this may be happening: 1) the cache and tlb are loading addresses 
+and each time  a write operation comes after a read operation (or vice versa) at the same 
+register, it validates the cache as we see with the cache coherence flow chart on slide 33, 
+and has to spend time getting the read-miss and write-miss messages across the before it can 
+properly form the request and more time getting the data row from DRAM. 2) the registers for 
+a read operation has to read from an entire row buffer (aka page) and rewrite the row buffer 
+back into the DRAM array, so when we start including more and more write operations, the 
+scheduler cannot efficiently sort the reads and writes without breaking the order of the 
+requests and therefore corrupting/invalidating the data it needed to access, so it has to 
+spend more time re-writing back to DRAM.
+tldr:
+1) validates data and has spend more time to fetch data more
+2) scheduler doesn't want to break operation order and spends more time writing back to main memory 
+
+(3) The Tradeoff Between Latency and Bandwidth of DRAM
+______________________________________________________
+(initally we tried to code the queuing theory, we had a number of tasks and gave we tasks at
+certain amount of delay to prevent pile up at the queue, but no matter how many tasks we gave
+whether it was 12 tasks or 250 tasks, the throughput and latency seemed to stay around the same
+value and it was giving us the opposite of what the queuing theory predicts)
+
+(we decided coding the queuing theory was too difficult and looked through the mlc DOCUMENT
+again to see what commands could help us get both throughput and latency)
+
+--loaded_latency
+we will get a certain bandwidth accosiated with a certain latency and show how this data
+mimmicks the queuing theory (at first, from 0-25,000 mb/s, we get relatively the same latency
+of 100-150, but once we should the bandwidth to 35,000 and higher, the latency increases at
+an exponential rate)
+(queuing theory predicts as the system throughput increases linearly, we will eventually see a
+point in the system, where the response time aka latency increases exponentially instead of 
+staying around the same value)
+
+There is an inherent trade-off between the latency of
+a memory system and the bandwith of the system. As
+discussed in class regarding SRAM array implementation,
+this is an inversely proportional relationship. A
+memory system can be designed to maximize bandwith,
+and thus throughput, OR can be optimized for low latency.
+With an increase in throughput (moving lots of data
+for a given unit of time), there will be negative
+impacts to latency due to constraints applied from
+semiconductor physics. Additionally, another key
+concept from queing theory suggests that a maximally
+utilized system correlates with high throughput.
+However, the higher that the utilization climbs, the
+longer the queue will inevitably become.
+
+(4) Impact of Cache Miss Ratio on Performance
+
+
+(5) Impact of TLB Miss Ratio on Performance
+
