@@ -61,6 +61,7 @@ we measure all write for default value of 64 bytes
 according to the readme, the bandwidth matrix command is supposed to be able to use -ln and -Wn 
 together, but it results in an error so we have no way to analyze all write bandwidth for
 256 bytes and 1024 bytes
+The other commands (max_bandwidth and peak_injection_bandwidth) cannot use -Wn parameter
 
 (3) The Tradeoff Between Latency and Bandwidth of DRAM
 
