@@ -97,7 +97,68 @@ There is an inherent trade-off between the latency of a memory system and the ba
 
 ## Part 4
 
+**Experiment Design**
 
+For part 4, a program was designed with two implementations of a simple two-dimensional array multiplication routine. One implementation performed array access in an intentionally suboptimal manner, which minimized spatial locality. The other implementation, whilst identical in function, performed operations in a manner which maximized the benefits of spatial locality. In this application, this meant changing the order by which the program iterated through the 2-D array. The routines were then individually timed to see the affects of reducing cache misses with better locality.
 
+To ensure that results were valid, the multiplication routines were performed with an array that was populated with randomly-generated integers between 1 and 10. Each routine was then repeated, with a new set of random numbers, 2500 times. The average execution time over all 2500 executions was then taken for each routine. In addition to the large sampling of 2500 executions, the program was written in both a low-level language (C) and a high level one (Python 3). The idea behind this decision was to ensure that compilation/runtime differences would not affect the outcome of this experiment.
+
+**Python Implementation (Project_1_Part_4.py)**
+
+```python
+# LOW SPATIAL LOCALITY
+start_time = time.time()
+for j in range(N):
+    for i in range(M):
+        x[i][j] = 2 * x[i][j]
+total_time_lo_locality += (time.time() - start_time)
+
+# HIGH SPATIAL LOCALITY
+start_time = time.time()
+for i in range(M):
+    for j in range(N):
+        x[i][j] = 2 * x[i][j]
+total_time_hi_locality += (time.time() - start_time)
+```
+
+**C Implementation (Project_1_Part_4.c)**
+
+```C
+// LOW SPATIAL LOCALITY
+start_time = clock();
+for (int j = 0; j < N; j++) {
+    for (int i = 0; i < M; i++) {
+        x[i][j] = 2 * x[i][j];
+    }
+}
+total_time_lo_locality += (double)(clock() - start_time) / CLOCKS_PER_SEC;
+
+// HIGH SPATIAL LOCALITY
+start_time = clock();
+for (int i = 0; i < M; i++) {
+    for (int j = 0; j < N; j++) {
+        x[i][j] = 2 * x[i][j];
+    }
+}
+total_time_hi_locality += (double)(clock() - start_time) / CLOCKS_PER_SEC;
+```
+
+**Data  and Analysis**
+
+Data from the Python implementation as received at the command line is shown below.
+
+    2500 test iterations executed in 415.1044 seconds.
+    Average execution times:
+    Low Spatial Locality: 0.0967 seconds
+    High Spatial Locality: 0.0693 seconds
+
+Data from the equivalent C implementation is shown below.
+
+    2500 test iterations executed in 15.8438 seconds.
+    Average execution times:
+    Low Spatial Locality: 0.0035 seconds
+    High Spatial Locality: 0.0029 seconds
+
+These data confirm that a high cache miss ratio, as forced by the low spatial locality of the first loop, do contribute to poor performance. The computation is identical, however optimizing the program's data access patterns to avoid cache misses by increasing general locality causes a noticable increase in performance. There is a calculated ***28% increase*** in speed with optimized cache usage in the Python program, and a ***17% increase*** in speed for the same optimization in the C program.
 ## Part 5
 
