@@ -108,6 +108,10 @@ This is surprising because we expected write-only is be higher than read-only si
 
 There is an inherent trade-off between the latency of a memory system and the bandwith of the system. As discussed in class regarding SRAM array implementation, this is an inversely proportional relationship. A memory system can be designed to maximize bandwith, and thus throughput, OR can be optimized for low latency. With an increase in throughput (moving lots of data for a given unit of time), there will be negative impacts to latency due to constraints applied from semiconductor physics. Additionally, another key concept from queing theory suggests that a maximally utilized system correlates with high throughput. However, the higher that the utilization climbs, the longer the queue will inevitably become.
 
+<div style="text-align: center;">
+<img src="Project 1 Part 3 - Chart.png">
+</div>
+
 ## Part 4
 
 **Experiment Design**
