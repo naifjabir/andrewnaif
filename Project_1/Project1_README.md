@@ -198,6 +198,7 @@ This means when we constantly jump around in the array, it accesses new values a
 
 **C Implementation (Project_1_Part_5.c)**
 
+```C
 #include <iostream>
 #include <chrono>
 #include <cstdlib>
@@ -236,6 +237,7 @@ int main() {
 
     return 0;
 }
+```
 
 **Data  and Analysis**
 
@@ -246,4 +248,4 @@ Data is shown below:
 
 We can see that the array is set in DRAM in certain ranges of DRAM arrays that are next to each other. So when we iterate linearly, we access data that is in the same page as the data next to it. But once we start randomly accessing different values, we hit other pages the TLB may not have yet, or may have already deleted since the size of its entries is so small. That why we see an increase of anywhere from +700% to +1200% compared to our normal value of 2 ns. 
 
-We can conclude that the impact that a high TLB miss ratio can have on software speed performance is very bad, and we want to decrease the miss ratio as much as possible. This may mean increasing the size of the TLB entries or chaning the memory access pattern to increase spacial locality. 
+We can conclude that the impact that a high TLB miss ratio can have on software speed performance is very bad, and we want to decrease the miss ratio as much as possible. This may mean increasing the size of the TLB entries or changing the memory access pattern to increase spacial locality. 
