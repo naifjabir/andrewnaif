@@ -91,11 +91,13 @@ According to the documentation, the bandwidth matrix command is supposed to be a
 
 There is a scheduler and a buffer (which we can change and right now its a 100mb buffer  to access DRAM) and because all read and all write is one operation its easier to handle  because its running one type of process but the ratios of read and write start to force the computer to do two different type of processes and thats why bandwidth deceases.
 
-we have two reasons why this may be happening: 1) the cache and tlb are loading addresses  and each time a write operation comes after a read operation (or vice versa) at the same register, it invalidates the cache as we see with the cache coherence flow chart on slide 33, and has to spend time getting the read-miss and write-miss messages across the before it can properly form the request and more time getting the data row from DRAM. 2) the registers for a read operation has to read from an entire row buffer (aka page) and rewrite the row buffer back into the DRAM array, so when we start including more and more write operations, the scheduler cannot efficiently sort the reads and writes without breaking the order of the requests and therefore corrupting/invalidating the data it needed to access, so it has to spend more time re-writing back to DRAM.
+we have two reasons why this may be happening: 
 
-tldr:
-1) validates data and has to fetch data more
-2) scheduler doesn't want to break operation order and spends more time writing back to main memory 
+1) The mix of read-write operations invalidates data in cache and DRAM has to spend more time fetching data
+ The Cache and TLB are loading addresses and each time a write operation comes after a read operation (or vice versa) at the same register, it invalidates the Cache as we see with the Cache Coherence flow chart on slide 33. CRAM has to spend more time getting the read-miss and write-miss messages to the CPU before it can properly fulfill the request. Because of these data invalidations, it spends more time getting the data row from DRAM and writing back to it.
+
+2) The scheduler doesn't want to break operation order and spends more time writing back to main memory
+ The registers for a read operation has to read from an entire row buffer (aka page) and rewrite the row buffer back into the DRAM array. So when we start including more and more write operations, the scheduler cannot efficiently sort the reads and writes without breaking the order of the requests. Breaking the order invalidates the data it needed to access, so it has to spend more time re-writing back to DRAM to get the proper data for each operation.
 
 ## Part 3
 
