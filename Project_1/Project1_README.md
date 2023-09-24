@@ -60,10 +60,10 @@ Maximum bandwidth we can get with stride byte size of 64 (for all read, 3:1 read
 
     --peak_injection_bandwidth -X -b100m -l64
 
-    ALL Reads:        44022 MB/s
-    3:1 Reads-Writes: 37476 MB/s
-    2:1 Reads-Writes: 36229 MB/s
-    1:1 Reads-Writes: 34083 MB/s
+    ALL Reads:        43700 MB/s
+    3:1 Reads-Writes: 36000 MB/s
+    2:1 Reads-Writes: 35000 MB/s
+    1:1 Reads-Writes: 33000 MB/s
 
 *Granularity: 256 B*
 
@@ -71,10 +71,10 @@ Maximum bandwidth we can get with stride byte size of 256 (for all read, 3:1 rea
 
     --peak_injection_bandwidth -X -b100m -l256
 
-    ALL Reads:        35683 MB/s
-    3:1 Reads-Writes: 30944 MB/s
-    2:1 Reads-Writes: 29897 MB/s
-    1:1 Reads-Writes: 29101 MB/s
+    ALL Reads:        34400 MB/s
+    3:1 Reads-Writes: 28300 MB/s
+    2:1 Reads-Writes: 26800 MB/s
+    1:1 Reads-Writes: 26000 MB/s
 
 *Granularity: 1024 B*
 
@@ -82,20 +82,25 @@ Maximum bandwidth we can get with stride byte size of 1024 (for all read, 3:1 re
 
     --peak_injection_bandwidth -X -b100m -l1024
 
-    ALL Reads:        42227 MB/s
-    3:1 Reads-Writes: 32038 MB/s
-    2:1 Reads-Writes: 28845 MB/s
-    1:1 Reads-Writes: 29251 MB/s
+    ALL Reads:        36300 MB/s
+    3:1 Reads-Writes: 27000 MB/s
+    2:1 Reads-Writes: 25300 MB/s
+    1:1 Reads-Writes: 25650 MB/s
 
 According to the documentation, the bandwidth matrix command is supposed to be able to use `-ln` and `-Wn` together, but it results in an error so we have no way to analyze all write bandwidth for 256 bytes and 1024 bytes. The other commands (`--max_bandwidth` and `--peak_injection_bandwidth`) cannot use `-Wn` parameter.
 
-We have two reasons for why bandwidth decreases as the read-write ratio goes from 1:0 to 1:1: 
+We have two reasons for why bandwidth decreases as the read-write ratio goes from 1:0 (100% read to 0% write) to 1:1 (50% read to 50% write): 
 
 1) The mix of read-write operations invalidates data in cache and DRAM has to spend more time fetching data
- The Cache and TLB are loading addresses and each time a write operation comes after a read operation (or vice versa) at the same register, it invalidates the Cache as we see with the Cache Coherence flow chart on slide 33. CRAM has to spend more time getting the read-miss and write-miss messages to the CPU before it can properly fulfill the request. Because of these data invalidations, it spends more time getting the data row from DRAM and writing back to it.
+ The Cache and TLB are loading addresses and each time a write operation comes after a read operation (or vice versa) at the same register, it invalidates the Cache as we see with the Cache Coherence flow chart on slide 33. DRAM gets more write-misses and read-misses since the CPU keeps changing between read-only and read-write model, since the data isn't valid anymore. Because of these data invalidations, it spends more time getting the data row from DRAM and writing back to it to ensure the data in each row buffer is valid.
 
 2) The scheduler doesn't want to break operation order and spends more time writing back to main memory
  The registers for a read operation has to read from an entire row buffer (aka page) and rewrite the row buffer back into the DRAM array. So when we start including more and more write operations, the scheduler cannot efficiently sort the reads and writes without breaking the order of the requests. Breaking the order invalidates the data it needed to access, so it has to spend more time re-writing back to DRAM to get the proper data for each operation.
+
+The default stride size for `-ln` is 64B.
+Using this information, we have successfully got the all-write bandwidth for one of the stride sizes, which is `--bandwidth_matrix` with the `-W6` command.
+We got an average of 37860 MB/s for this command. 
+This is surprising because we expected write-only is be higher than read-only since the write operation is non-blocking. This may imply that this bandwidth_matrix test doesn't do peak injections and thereby we get a lower bandwidth. However, this information does confirm the write-only function will reach a higher bandwidth than 1:1 read-write (50% read to 50% write) even at peak injection rate and also confirms that the cache follows what the Cache Coherence flow chart predicts, since we seem to get a lower bandwidth due to the increasing number of read-misses and write-misses when the cache move away from 100% read (or 100% write) towards 50% read to write 50% write.
 
 ## Part 3
 
