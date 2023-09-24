@@ -89,9 +89,7 @@ Maximum bandwidth we can get with stride byte size of 1024 (for all read, 3:1 re
 
 According to the documentation, the bandwidth matrix command is supposed to be able to use `-ln` and `-Wn` together, but it results in an error so we have no way to analyze all write bandwidth for 256 bytes and 1024 bytes. The other commands (`--max_bandwidth` and `--peak_injection_bandwidth`) cannot use `-Wn` parameter.
 
-There is a scheduler and a buffer (which we can change and right now its a 100mb buffer  to access DRAM) and because all read and all write is one operation its easier to handle  because its running one type of process but the ratios of read and write start to force the computer to do two different type of processes and thats why bandwidth deceases.
-
-we have two reasons why this may be happening: 
+We have two reasons for why bandwidth decreases as the read-write ratio goes from 1:0 to 1:1: 
 
 1) The mix of read-write operations invalidates data in cache and DRAM has to spend more time fetching data
  The Cache and TLB are loading addresses and each time a write operation comes after a read operation (or vice versa) at the same register, it invalidates the Cache as we see with the Cache Coherence flow chart on slide 33. CRAM has to spend more time getting the read-miss and write-miss messages to the CPU before it can properly fulfill the request. Because of these data invalidations, it spends more time getting the data row from DRAM and writing back to it.
