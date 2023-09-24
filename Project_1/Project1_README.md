@@ -17,6 +17,7 @@ The size of the caches for the target processor, an Intel Core i7-12700K, are as
     L1: 1.0 MB
     L2: 12.0 MB
     L3: 25.0 MB
+\*Note: The source of these values is available at `Project_1/12700K Task Manager With Cache Sizes.png`.
 
 To test latencies, we will use the MLC commands below:
 
@@ -44,7 +45,7 @@ over three runs each:
     L3 Cache Read Latency: 36.30 ns
     DRAM Read Latency:     69.87 ns
 
-Latency for writing to any level of the memory hierarchy is less than that for reading, under most circumstances. We are unable to precisely determine these values (using `perf` or the MLC), however we can say with a high degree of certainty that they are less than or equal to, but no higher than, the read latencies that are listed above. This is due to the non-blocking nature of a memory write, as opposed to the blocking nature of a read. Reading requires that the processor wait for a value to be returned from the memory, however writing does not have this requirement.
+Latency for writing to any level of the memory hierarchy is less than that for reading, under most circumstances. We are unable to precisely determine these values (using `perf` or the MLC), however we can say with a high degree of certainty that they are less than or equal to, but no higher than, the read latencies that are listed above. This is due to the non-blocking nature of a memory write, as opposed to the blocking nature of a read. Reading requires that the processor wait for a value to be returned from the memory, however writing does not have this requirement. Raw data from this section is located in the `Project_1` folder, in `Project 1 Part 1 - MLC Outputs.txt`.
 
 ## Part 2
 
@@ -102,6 +103,8 @@ Using this information, we have successfully gotten the all-write bandwidth for 
 We got an average of 37860 MB/s for this command. 
 This is surprising because we expected write-only is be higher than read-only since the write operation is non-blocking. This may imply that this bandwidth_matrix test doesn't do peak injections and thereby we get a lower bandwidth. However, this information does confirm the write-only function will reach a higher bandwidth than 1:1 read-write (50% read to 50% write) even at peak injection rate and also confirms that the cache follows what the Cache Coherence flow chart predicts, since we seem to get a lower bandwidth due to the increasing number of read-misses and write-misses when the cache move away from 100% read (or 100% write) towards 50% read to write 50% write.
 
+For insight on this analysis, raw data used is available in the `Project_1` folder, and has the prefix `Project 1 Part 2`.
+
 ## Part 3
 
 **Latency vs. Throughput Background**
@@ -111,6 +114,10 @@ There is an inherent trade-off between the latency of a memory system and the ba
 <div style="text-align: center;">
 <img src="Project 1 Part 3 - Chart.png">
 </div>
+
+The graph above shows data collected from `mlc.exe --loaded_latency`, which uses injection delays to alter bandwidth and latency. The injection delay is not important in the analysis for this section, so it has been omitted here and we have focused on Bandwidth (MBps) and Latency (ns). The command output provides different bandwidths, and the corresponding latency for that bandwidth. The command was run three times for experimental accuracy, and all of the Latency vs. Bandwidth datapoints were plotted as shown above.
+
+The data supports what we have learned from queuing theory, and demonstrates that with increasing bandwidth comes increasing latency. All raw data used in this analysis is available in the `Project_1` folder, and has the prefix `Project 1 Part 3`.
 
 ## Part 4
 
