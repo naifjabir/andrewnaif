@@ -179,3 +179,63 @@ Data from the equivalent C implementation is shown below.
 These data confirm that a high cache miss ratio, as forced by the low spatial locality of the first loop, do contribute to poor performance. The computation is identical, however optimizing the program's data access patterns to avoid cache misses by increasing general locality causes a noticable increase in performance. There is a calculated ***28% increase*** in speed with optimized cache usage in the Python program, and a ***17% increase*** in speed for the same optimization in the C program.
 ## Part 5
 
+TLBs typically use one of two policies:
+1. Least Recently Used (LRU) - the TLB entry that has not been used for the longest time is replaced
+2. First-In-First-Out (FIFO) - the TLB entry that was first inserted is replaced
+(there are others, but these are the most popular)
+
+When the code accesses the data in our array, it accesses and records a page (a row of data in DRAM) on the TLB so it can translate and get that page faster if we want to access values within the same page. We are basically in the same locality when we look up values that are in the same array. Let say our TLB can hold 100 pages, and our array is in 1000 pages in physical memory. That means if we linearly iterate through the array, it accesses the same page in physical memory because TLB has recorded the page and hence, the locaility we will most likely find our value. 
+
+This means when we constantly jump around in the array, it accesses new values and hence new pages the TLB has likely not recorded yet (or has deleted already). And once we hit the limit of pages TLB can hold, it deletes one of the older pages and has to find the page in physical memory again in order to record it. Of course, to make experiment trials as accurate as possible, we do 1 million iterations for our random value.
+
+**C Implementation (Project_1_Part_5.c)**
+
+#include <iostream>
+#include <chrono>
+#include <cstdlib>
+
+const int ARRAY_SIZE = 1024 * 1024; // 1 MB array size
+const int NUM_ITERATIONS = 1000000;
+
+int main() {
+    // Initialize an array
+    int array[ARRAY_SIZE];
+
+    // Initialize the TLB by writing in elements
+    for (int i = 0; i < ARRAY_SIZE; ++i) {
+        array[i] = i;
+    }
+
+    // Measure the time to access elements when hitting the TLB
+    auto start = std::chrono::high_resolution_clock::now();
+    for (int i = 0; i < NUM_ITERATIONS; ++i) {
+        int index = i % ARRAY_SIZE; // Ensure TLB hit by cycling through the array
+        int value = array[index];
+    }
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration_hit = (std::chrono::duration_cast<std::chrono::nanoseconds>(end - start)/NUM_ITERATIONS);
+    std::cout << "Time taken when hitting TLB: " << duration_hit.count() << " nanoseconds\n";
+
+    // Measure the time to access elements when missing the TLB
+    start = std::chrono::high_resolution_clock::now();
+    for (int i = 0; i < NUM_ITERATIONS; ++i) {
+        int index = rand() % ARRAY_SIZE; // Random access within the array
+        int value = array[index];
+    }
+    end = std::chrono::high_resolution_clock::now();
+    auto duration_miss = (std::chrono::duration_cast<std::chrono::nanoseconds>(end - start)/NUM_ITERATIONS);
+    std::cout << "Time taken when missing TLB: " << duration_miss.count() << " nanoseconds\n";
+
+    return 0;
+}
+
+**Data  and Analysis**
+
+Data is shown below:
+
+    Time taken when hitting TLB: 2 nanoseconds
+    Time taken when missing TLB: 18 nanoseconds
+
+We can see that the array is set in DRAM in certain ranges of DRAM arrays that are next to each other. So when we iterate linearly, we access data that is in the same page as the data next to it. But once we start randomly accessing different values, we hit other pages the TLB may not have yet, or may have already deleted since the size of its entries is so small. That why we see an increase of anywhere from +700% to +1200% compared to our normal value of 2 ns. 
+
+We can conclude that the impact that a high TLB miss ratio can have on software speed performance is very bad, and we want to decrease the miss ratio as much as possible. This may mean increasing the size of the TLB entries or chaning the memory access pattern to increase spacial locality. 

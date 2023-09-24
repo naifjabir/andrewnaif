@@ -1,6 +1,6 @@
 #include <iostream>
 #include <chrono>
-#include <cstdlib> // For rand()
+#include <cstdlib>
 
 const int ARRAY_SIZE = 1024 * 1024; // 1 MB array size
 const int NUM_ITERATIONS = 1000000;
@@ -9,7 +9,7 @@ int main() {
     // Initialize an array
     int array[ARRAY_SIZE];
 
-    // Warm up the TLB by accessing some elements
+    // Initialize the TLB by writing in elements
     for (int i = 0; i < ARRAY_SIZE; ++i) {
         array[i] = i;
     }
