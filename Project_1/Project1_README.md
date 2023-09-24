@@ -98,7 +98,7 @@ We have two reasons for why bandwidth decreases as the read-write ratio goes fro
  The registers for a read operation has to read from an entire row buffer (aka page) and rewrite the row buffer back into the DRAM array. So when we start including more and more write operations, the scheduler cannot efficiently sort the reads and writes without breaking the order of the requests. Breaking the order invalidates the data it needed to access, so it has to spend more time re-writing back to DRAM to get the proper data for each operation.
 
 The default stride size for `-ln` is 64B.
-Using this information, we have successfully got the all-write bandwidth for one of the stride sizes, which is `--bandwidth_matrix` with the `-W6` command.
+Using this information, we have successfully gotten the all-write bandwidth for one of the stride sizes, which is `--bandwidth_matrix` with the `-W6` command.
 We got an average of 37860 MB/s for this command. 
 This is surprising because we expected write-only is be higher than read-only since the write operation is non-blocking. This may imply that this bandwidth_matrix test doesn't do peak injections and thereby we get a lower bandwidth. However, this information does confirm the write-only function will reach a higher bandwidth than 1:1 read-write (50% read to 50% write) even at peak injection rate and also confirms that the cache follows what the Cache Coherence flow chart predicts, since we seem to get a lower bandwidth due to the increasing number of read-misses and write-misses when the cache move away from 100% read (or 100% write) towards 50% read to write 50% write.
 
