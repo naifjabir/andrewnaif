@@ -177,6 +177,7 @@ Data from the equivalent C implementation is shown below.
     High Spatial Locality: 0.0029 seconds
 
 These data confirm that a high cache miss ratio, as forced by the low spatial locality of the first loop, do contribute to poor performance. The computation is identical, however optimizing the program's data access patterns to avoid cache misses by increasing general locality causes a noticable increase in performance. There is a calculated ***28% increase*** in speed with optimized cache usage in the Python program, and a ***17% increase*** in speed for the same optimization in the C program.
+
 ## Part 5
 
 TLBs typically use one of two policies:
